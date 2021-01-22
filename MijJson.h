@@ -2,8 +2,8 @@
 // Created by Jason on 2021/1/21.
 //
 
-#ifndef MIJJSON_JSONDOCUMENT_H
-#define MIJJSON_JSONDOCUMENT_H
+#ifndef MIJJSON_MIJJSON_H
+#define MIJJSON_MIJJSON_H
 
 #include <cstddef>
 #include <memory>
@@ -69,4 +69,4 @@ private:
 };
 }  // namespace mij_json
 
-#endif  //MIJJSON_JSONDOCUMENT_H
+#endif  //MIJJSON_MIJJSON_H

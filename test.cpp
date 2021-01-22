@@ -1,6 +1,6 @@
 #include <iostream>
 #include <gtest/gtest.h>
-#include "JsonDocument.h"
+#include "MijJson.h"
 namespace mij_json {
 struct DocumentTest {
     static inline void testLiteral(ValueType type, const char *json) {
