@@ -15,11 +15,37 @@
 namespace mij_json {
     struct Value::Context {
         const char *json;
+        char *stack;
+        size_t size;
+        size_t top;
+
+        void *push(size_t size) {
+            char *ret;
+            assert(size > 0);
+            if(this->top + size >= this->size) {
+                this->size = MIJ_PARSE_STACK_INIT_SIZE;
+            }
+            while(this->top + size >= this->size) {
+                this->size += this->size >> 1;
+            }
+            this->stack = static_cast<char *>(realloc(this->stack, this->size));
+            ret = this->stack + this->top;
+            this->top += size;
+            return ret;
+        }
+
+        void *pop(size_t size) {
+            assert(this->top >= size);
+            this->top -= size;
+            return this->stack + this->top;
+        }
     };
 
     ParseError Value::parse(const char *json) {
+//        type = MIJ_NULL;
+//        return MIJ_PARSE_INVALID_VALUE;
         ParseError error;
-        Context c{json};
+        Context c{json, nullptr, 0, 0};
 
         type = MIJ_NULL;
 
@@ -39,6 +65,10 @@ namespace mij_json {
         if (error != MIJ_PARSE_OK) {
             type = MIJ_NULL;
         }
+
+        assert(c.top == 0);
+        free(c.stack);
+
         return error;
     }
 

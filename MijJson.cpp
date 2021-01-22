@@ -15,7 +15,7 @@ namespace mij_json {
 
     void Value::setNull() {
         if(this->type == MIJ_STRING) {
-            delete[] string;
+            free(string);
         }
         this->type = MIJ_NULL;
     }
@@ -63,7 +63,7 @@ namespace mij_json {
         assert(str != nullptr || length == 0);
 
         setNull();
-        this->string = new char[length];
+        this->string = static_cast<char*>(malloc(length + 1));
         this->length = length;
         memcpy(this->string, str, length);
         this->string[length] = '\0';
