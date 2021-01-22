@@ -1,8 +1,9 @@
-//
-// Created by Jason on 2021/1/22.
-//
+/**
+/* @author Jason Cheung
+ * @date 2021/1/22.
+ */
 
-#include "MijJson.h"
+#include "mijjson.h"
 
 #include <cassert>
 #include <cctype>
@@ -12,7 +13,7 @@
 #include <cerrno>
 #include <cmath>
 
-namespace mij_json {
+namespace mijjson {
     struct Value::Context {
         const char *json;
         char *stack;
@@ -22,10 +23,10 @@ namespace mij_json {
         void *push(size_t size) {
             char *ret;
             assert(size > 0);
-            if(this->top + size >= this->size) {
+            if (this->top + size >= this->size) {
                 this->size = MIJ_PARSE_STACK_INIT_SIZE;
             }
-            while(this->top + size >= this->size) {
+            while (this->top + size >= this->size) {
                 this->size += this->size >> 1;
             }
             this->stack = static_cast<char *>(realloc(this->stack, this->size));
@@ -41,13 +42,11 @@ namespace mij_json {
         }
 
         void push_char(char ch) {
-            *static_cast<char*>(push(sizeof(char))) = ch;
+            *static_cast<char *>(push(sizeof(char))) = ch;
         }
     };
 
     ParseError Value::parse(const char *json) {
-//        type = MIJ_NULL;
-//        return MIJ_PARSE_INVALID_VALUE;
         ParseError error;
         Context c{json, nullptr, 0, 0};
 
@@ -157,16 +156,18 @@ namespace mij_json {
         c->json = p;
         return MIJ_PARSE_OK;
     }
+
 #undef PARSE_DIGITS
 #undef ISDIGIT
 
     ParseError Value::parseString(Context *c) {
-        const char* p;
+        /* Need Optimized and Refactored */
+        const char *p;
         size_t head = c->top;
         assert(*c->json == '\"');
         ++c->json;
         p = c->json;
-        for(;;) {
+        for (;;) {
             char ch = *p++;
             switch (ch) {
                 case '\\': {
@@ -218,4 +219,4 @@ namespace mij_json {
             }
         }
     }
-}
+} /* namespace mijjson */

@@ -1,20 +1,21 @@
-//
-// Created by Jason on 2021/1/21.
-//
+/**
+/* @author Jason Cheung
+ * @date 2021/1/21.
+ */
 
-#include "MijJson.h"
+#include "mijjson.h"
 
 #include <cassert>
 #include <cctype>
 #include <cstring>
 
-namespace mij_json {
+namespace mijjson {
     Value::~Value() {
         setNull();
     }
 
     void Value::setNull() {
-        if(this->type == MIJ_STRING) {
+        if (this->type == MIJ_STRING) {
             free(string);
         }
         this->type = MIJ_NULL;
@@ -63,10 +64,10 @@ namespace mij_json {
         assert(str != nullptr || length == 0);
 
         setNull();
-        this->string = static_cast<char*>(malloc(length + 1));
+        this->string = static_cast<char *>(malloc(length + 1));
         this->length = length;
         memcpy(this->string, str, length);
         this->string[length] = '\0';
         this->type = MIJ_STRING;
     }
-}  // namespace mij_json
+}  /* namespace mijjson */

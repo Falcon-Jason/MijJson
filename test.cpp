@@ -1,10 +1,14 @@
-#include <iostream>
+/**
+/* @author Jason Cheung
+ * @date 2021/1/21.
+ */
+
 #include <gtest/gtest.h>
-#include "MijJson.h"
+#include "mijjson.h"
 
 #define EXPECT_MEMEQ(s1, s2, len) EXPECT_TRUE(memcmp(s1, s2, len) == 0)
 
-namespace mij_json {
+namespace mijjson {
 struct DocumentTest {
     static inline void testLiteral(ValueType type, const char *json) {
         Value v{};
@@ -168,9 +172,9 @@ struct DocumentTest {
         EXPECT_EQ(5, v.getStringLength());
     }
 };
-}  // namespace mij_json
+}  // namespace mijjson
 
-using namespace mij_json;
+using namespace mijjson;
 
 TEST(documentTest, parse) {
     DocumentTest::testParseLiteral();
