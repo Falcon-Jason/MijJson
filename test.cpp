@@ -63,14 +63,14 @@ struct DocumentTest {
         Value v{};
         EXPECT_EQ(MIJ_PARSE_OK, v.parse(json));
         EXPECT_EQ(MIJ_STRING, v.getType());
-        EXPECT_MEMEQ(expect, v.getString(), v.getStringLength());
+        EXPECT_STREQ(expect, v.getString());
     }
 
     static void testParseString() {
-//        testString("", "\"\"");
-//        testString("Hello", "\"Hello\"");
-//        testString("Hello\nWorld", R"("Hello\nWorld")");
-//        testString("\" \\ / \b \f \n \r \t", R"("\" \\ \/ \b \f \n \r \t")");
+        testString("", "\"\"");
+        testString("Hello", "\"Hello\"");
+        testString("Hello\nWorld", R"("Hello\nWorld")");
+        testString("\" \\ / \b \f \n \r \t", R"("\" \\ \/ \b \f \n \r \t")");
     }
 
     static inline void testError(int error, const char *json) {
@@ -120,20 +120,20 @@ struct DocumentTest {
     }
 
     static void testParseMissingQuotationMark() {
-//        testError(MIJ_PARSE_MISS_QUOTATION_MARK, "\"");
-//        testError(MIJ_PARSE_MISS_QUOTATION_MARK, "\"abc");
+        testError(MIJ_PARSE_MISS_QUOTATION_MARK, "\"");
+        testError(MIJ_PARSE_MISS_QUOTATION_MARK, "\"abc");
     }
 
     static void testParseInvalidStringEscape() {
-//        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\v")");
-//        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\'")");
-//        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\0")");
-//        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\x12")");
+        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\v")");
+        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\'")");
+        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\0")");
+        testError(MIJ_PARSE_INVALID_STRING_ESCAPE, R"("\x12")");
     }
 
     static void testParseInvalidStringChar() {
-//        testError(MIJ_PARSE_INVALID_STRING_CHAR, "\"\x01\"");
-//        testError(MIJ_PARSE_INVALID_STRING_CHAR, "\"\x1F\"");
+        testError(MIJ_PARSE_INVALID_STRING_CHAR, "\"\x01\"");
+        testError(MIJ_PARSE_INVALID_STRING_CHAR, "\"\x1F\"");
     }
 
     static void testAccessNull() {
@@ -175,11 +175,14 @@ using namespace mij_json;
 TEST(documentTest, parse) {
     DocumentTest::testParseLiteral();
     DocumentTest::testParseNumber();
+    DocumentTest::testParseString();
     DocumentTest::testParseExpectValue();
     DocumentTest::testParseInvalidValue();
     DocumentTest::testParseRootNotSingular();
     DocumentTest::testParseNumberTooLarge();
-    DocumentTest::testParseString();
+    DocumentTest::testParseMissingQuotationMark();
+    DocumentTest::testParseInvalidStringEscape();
+    DocumentTest::testParseInvalidStringChar();
 }
 
 TEST(documentTest, access) {

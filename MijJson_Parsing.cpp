@@ -39,6 +39,10 @@ namespace mij_json {
             this->top -= size;
             return this->stack + this->top;
         }
+
+        void push_char(char ch) {
+            *static_cast<char*>(push(sizeof(char))) = ch;
+        }
     };
 
     ParseError Value::parse(const char *json) {
@@ -83,6 +87,8 @@ namespace mij_json {
             case '0' ... '9':
             case '-':
                 return parseNumber(c);
+            case '\"':
+                return parseString(c);
             case '\0':
                 return MIJ_PARSE_EXPECT_VALUE;
             default:
@@ -150,5 +156,66 @@ namespace mij_json {
         }
         c->json = p;
         return MIJ_PARSE_OK;
+    }
+#undef PARSE_DIGITS
+#undef ISDIGIT
+
+    ParseError Value::parseString(Context *c) {
+        const char* p;
+        size_t head = c->top;
+        assert(*c->json == '\"');
+        ++c->json;
+        p = c->json;
+        for(;;) {
+            char ch = *p++;
+            switch (ch) {
+                case '\\': {
+                    char nextCh = *p++;
+                    switch (nextCh) {
+                        case '\"':
+                        case '\\':
+                        case '/':
+                            c->push_char(nextCh);
+                            break;
+                        case 'b':
+                            c->push_char('\b');
+                            break;
+                        case 'f':
+                            c->push_char('\f');
+                            break;
+                        case 'n':
+                            c->push_char('\n');
+                            break;
+                        case 'r':
+                            c->push_char('\r');
+                            break;
+                        case 't':
+                            c->push_char('\t');
+                            break;
+                        default:
+                            c->top = head;
+                            return MIJ_PARSE_INVALID_STRING_ESCAPE;
+                    }
+                    break;
+                }
+                case '\"': {
+                    size_t len = c->top - head;
+                    setString((const char *) c->pop(len), len);
+                    c->json = p;
+                    return MIJ_PARSE_OK;
+                }
+                case '\0': {
+                    c->top = head;
+                    return MIJ_PARSE_MISS_QUOTATION_MARK;
+                }
+                case '\x01'...'\x1f': {
+                    c->top = head;
+                    return MIJ_PARSE_INVALID_STRING_CHAR;
+                }
+                default: {
+                    c->push_char(ch);
+                }
+            }
+        }
     }
 }

@@ -73,6 +73,7 @@ private:
     ParseError parseValue(Context *c);
     ParseError parseLiteral(Context *c, const char *literal, int literal_length, ValueType literal_type);
     ParseError parseNumber(Context *c);
+    ParseError parseString(Context *c);
 };
 }  // namespace mij_json
 

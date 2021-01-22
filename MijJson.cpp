@@ -69,10 +69,4 @@ namespace mij_json {
         this->string[length] = '\0';
         this->type = MIJ_STRING;
     }
-
-
-
-#undef PARSE_DIGITS
-#undef ISDIGIT
-
 }  // namespace mij_json
