@@ -3,11 +3,12 @@
  * @date 2021/1/21.
  */
 
-#include "mijjson.h"
+#include "mijjson_value.h"
 
 #include <cassert>
 #include <cctype>
 #include <cstring>
+#include <cstdlib>
 
 namespace mijjson {
     Value::~Value() {
@@ -16,7 +17,7 @@ namespace mijjson {
 
     void Value::setNull() {
         if (this->type == MIJ_STRING) {
-            free(string);
+            Allocator::free(string);
         }
         this->type = MIJ_NULL;
     }
@@ -64,7 +65,7 @@ namespace mijjson {
         assert(str != nullptr || length == 0);
 
         setNull();
-        this->string = static_cast<char *>(malloc(length + 1));
+        this->string = Allocator::malloc(length + 1);
         this->length = length;
         memcpy(this->string, str, length);
         this->string[length] = '\0';

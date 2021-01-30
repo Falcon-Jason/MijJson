@@ -3,8 +3,10 @@
  * @date 2021/1/21.
  */
 
-#ifndef MIJJSON_MIJJSON_H
-#define MIJJSON_MIJJSON_H
+#include <cstdlib>
+
+#ifndef MIJJSON_MIJJSON_VALUE_H
+#define MIJJSON_MIJJSON_VALUE_H
 
 #ifndef MIJ_PARSE_STACK_INIT_SIZE
 #define MIJ_PARSE_STACK_INIT_SIZE 256
@@ -36,8 +38,23 @@ namespace mijjson {
         MIJ_OBJECT
     };
 
+    struct SimpleAllocator{
+        static char *malloc(size_t size) {
+            return static_cast<char *>(std::malloc(size));
+        }
+
+        static char *realloc(char *base, size_t size) {
+            return static_cast<char *>(std::realloc(base, size));
+        }
+
+        static void free(char *base) {
+            std::free(base);
+        }
+    };
+
     class Value {
     private:
+        using Allocator = SimpleAllocator;
         ValueType type;
         union {
             double number;
@@ -72,8 +89,6 @@ namespace mijjson {
 
         void setString(const char *, size_t length);
 
-        friend class DocumentTest;
-
     private:
         struct Context;
 
@@ -89,4 +104,4 @@ namespace mijjson {
     };
 }  /* namespace mijjson */
 
-#endif  //MIJJSON_MIJJSON_H
+#endif  //MIJJSON_MIJJSON_VALUE_H

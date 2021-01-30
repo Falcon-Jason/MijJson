@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(MijJson)
 
 set(CMAKE_CXX_STANDARD 14)
+add_library(MijJson mijjson_value.h mijjson_parser.cpp mijjson_value.cpp)
 
-add_executable(MijJson test.cpp mijjson.cpp mijjson.h mijjson_parse.cpp)
-target_link_libraries(MijJson gtest)
+add_executable(MijJson_Test test.cpp mijjson_value.cpp mijjson_value.h mijjson_parser.cpp)
+target_link_libraries(MijJson_Test gtest)

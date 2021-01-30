@@ -3,7 +3,7 @@
  * @date 2021/1/22.
  */
 
-#include "mijjson.h"
+#include "mijjson_value.h"
 
 #include <cassert>
 #include <cctype>
@@ -14,6 +14,8 @@
 #include <cmath>
 
 namespace mijjson {
+
+
     struct Value::Context {
         const char *json;
         char *stack;
@@ -29,7 +31,7 @@ namespace mijjson {
             while (this->top + size >= this->size) {
                 this->size += this->size >> 1;
             }
-            this->stack = static_cast<char *>(realloc(this->stack, this->size));
+            this->stack = Allocator::realloc(this->stack, this->size);
             ret = this->stack + this->top;
             this->top += size;
             return ret;
@@ -50,7 +52,7 @@ namespace mijjson {
         ParseError error;
         Context c{json, nullptr, 0, 0};
 
-        type = MIJ_NULL;
+        setNull();
 
         parseWhitespaces(&c);
 
@@ -70,7 +72,7 @@ namespace mijjson {
         }
 
         assert(c.top == 0);
-        free(c.stack);
+        Allocator::free(c.stack);
 
         return error;
     }
