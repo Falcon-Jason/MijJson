@@ -59,6 +59,7 @@ namespace mijjson {
         union {
             double number;
             struct {
+                bool boolean;
                 size_t length;
                 char *string;
             };
@@ -73,15 +74,23 @@ namespace mijjson {
 
         ValueType getType() const;
 
+        bool isNull() const;
+
         void setNull();
+
+        bool isBoolean() const;
 
         bool getBoolean() const;
 
         void setBoolean(bool boolean);
 
+        bool isNumber() const;
+
         double getNumber() const;
 
         void setNumber(double number);
+
+        bool isString() const;
 
         const char *getString() const;
 
@@ -89,18 +98,7 @@ namespace mijjson {
 
         void setString(const char *, size_t length);
 
-    private:
-        struct Context;
-
-        static void parseWhitespaces(Context *c);
-
-        ParseError parseValue(Context *c);
-
-        ParseError parseLiteral(Context *c, const char *literal, int literal_length, ValueType literal_type);
-
-        ParseError parseNumber(Context *c);
-
-        ParseError parseString(Context *c);
+        friend class Parser;
     };
 }  /* namespace mijjson */
 

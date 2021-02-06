@@ -5,7 +5,7 @@
 
 #include <string>
 #include <gtest/gtest.h>
-#include "mijjson_value.h"
+#include "mijjson.h"
 
 using namespace mijjson;
 
